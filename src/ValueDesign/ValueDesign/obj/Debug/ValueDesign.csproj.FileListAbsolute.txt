@@ -1,0 +1,16 @@
+D:\ValueBodyDesign\ValueDesign\ValueDesign\bin\Debug\ValueDesign.dll
+D:\ValueBodyDesign\ValueDesign\ValueDesign\bin\Debug\ValueDesign.pdb
+D:\ValueBodyDesign\ValueDesign\ValueDesign\bin\Debug\ValueDesign.tlb
+D:\ValueBodyDesign\ValueDesign\ValueDesign\bin\Debug\SolidWorksTools.dll
+D:\ValueBodyDesign\ValueDesign\ValueDesign\obj\Debug\ValueDesign.csprojResolveAssemblyReference.cache
+D:\ValueBodyDesign\ValueDesign\ValueDesign\obj\Debug\ValueDesign.dll
+D:\ValueBodyDesign\ValueDesign\ValueDesign\obj\Debug\ValueDesign.pdb
+D:\Projects\solidworks\ValueBodyDesign\ValueDesign\ValueDesign\obj\Debug\ValueDesign.csprojResolveAssemblyReference.cache
+D:\Projects\solidworks\ValueBodyDesign\ValueDesign\ValueDesign\obj\Debug\ValueDesign.pdb
+D:\Projects\ValueBodyDesign\ValueDesign\ValueDesign\bin\Debug\ValueDesign.dll
+D:\Projects\ValueBodyDesign\ValueDesign\ValueDesign\bin\Debug\ValueDesign.pdb
+D:\Projects\ValueBodyDesign\ValueDesign\ValueDesign\bin\Debug\ValueDesign.tlb
+D:\Projects\ValueBodyDesign\ValueDesign\ValueDesign\bin\Debug\SolidWorksTools.dll
+D:\Projects\ValueBodyDesign\ValueDesign\ValueDesign\obj\Debug\ValueDesign.csprojResolveAssemblyReference.cache
+D:\Projects\ValueBodyDesign\ValueDesign\ValueDesign\obj\Debug\ValueDesign.dll
+D:\Projects\ValueBodyDesign\ValueDesign\ValueDesign\obj\Debug\ValueDesign.pdb
