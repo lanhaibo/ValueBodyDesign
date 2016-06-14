@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using SolidWorks.Interop.sldworks;
 using SolidWorks.Interop.swpublished;
 using SolidWorks.Interop.swconst;
@@ -6,16 +6,23 @@ using System.Diagnostics;
 
 namespace ValueDesign
 {
-
-    public class PMPHandler : IPropertyManagerPage2Handler9
+    public class ValueBodyPMPHandler : IPropertyManagerPage2Handler9
     {
         ISldWorks iSwApp;
-        SwAddin userAddin;
-
-        public PMPHandler(SwAddin addin)
+        SwAddin userAddin; 
+        ModelDoc2 swModel;
+        ValueBodyPMPage activePage;
+        readonly double  factor = 1000.0;
+        public Feature ExtrudeFeature
+        {
+            get;
+            set;
+        }
+        public ValueBodyPMPHandler(SwAddin addin, ValueBodyPMPage runningPage)
         {
             userAddin = addin;
             iSwApp = (ISldWorks)userAddin.SwApp;
+            activePage = runningPage;
         }
 
         //Implement these methods from the interface
@@ -40,6 +47,34 @@ namespace ValueDesign
             int IndentSize;
             IndentSize = System.Diagnostics.Debug.IndentSize;
             System.Diagnostics.Debug.WriteLine(IndentSize);
+
+
+            ModelDoc2 swModel = (ModelDoc2)iSwApp.ActiveDoc;
+            if (reason == (int)swPropertyManagerPageCloseReasons_e.swPropertyManagerPageClose_Okay)
+            {
+                double l = this.activePage.GetCubeLength() / factor;
+                double w = this.activePage.GetCubeWidth() / factor;
+                double h = this.activePage.GetCubeHeight() / factor;
+
+                swModel.SketchRectangle(0, 0, 0, l, w, 0, false);
+                //Extrude the sketch                           
+                IFeatureManager featMan = swModel.FeatureManager;
+                Feature valuebody = featMan.FeatureExtrusion(true,
+                    false, false,
+                    (int)swEndConditions_e.swEndCondBlind, (int)swEndConditions_e.swEndCondBlind,
+                    h, 0.0,
+                    false, false,
+                    false, false,
+                    0.0, 0.0,
+                    false, false,
+                    false, false,
+                    true,
+                    false, false);
+
+                //修改特征名称为：阀块基体                
+                valuebody.Name = "阀块基体";
+
+            }
         }
 
         public void OnComboboxEditChanged(int id, string text)

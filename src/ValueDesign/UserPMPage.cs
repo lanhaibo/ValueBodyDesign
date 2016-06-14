@@ -68,7 +68,7 @@ namespace ValueDesign
                 (int)swPropertyManagerPageOptions_e.swPropertyManagerOptions_CancelButton;
 
             handler = new PMPHandler(userAddin);
-            swPropertyPage = (IPropertyManagerPage2)iSwApp.CreatePropertyManagerPage("Sample PMP", options, handler, ref errors);
+            swPropertyPage = (IPropertyManagerPage2)iSwApp.CreatePropertyManagerPage("阀体参数选择", options, handler, ref errors);
             if (swPropertyPage != null && errors == (int)swPropertyManagerPageStatus_e.swPropertyManagerPage_Okay)
             {
                 try

@@ -44,6 +44,8 @@ namespace ValueDesign
 
         #region Property Manager Variables
         UserPMPage ppage = null;
+        ValueBodyPMPage valueBodyPpage = null;
+
         #endregion
 
 
@@ -201,7 +203,7 @@ namespace ValueDesign
                 iBmp = new BitmapHandler();
             Assembly thisAssembly;
             int cmdIndex0, cmdIndex1;
-            string Title = "C# Addin", ToolTip = "C# Addin";
+            string Title = "阀块设计", ToolTip = "阀块设计";
 
 
             int[] docTypes = new int[]{(int)swDocumentTypes_e.swDocASSEMBLY,
@@ -227,7 +229,7 @@ namespace ValueDesign
                     ignorePrevious = true;
                 }
             }
-
+            
             cmdGroup = iCmdMgr.CreateCommandGroup2(mainCmdGroupID, Title, ToolTip, "", -1, ignorePrevious, ref cmdGroupErr);
             cmdGroup.LargeIconList = iBmp.CreateFileFromResourceBitmap("ValueDesign.ToolbarLarge.bmp", thisAssembly);
             cmdGroup.SmallIconList = iBmp.CreateFileFromResourceBitmap("ValueDesign.ToolbarSmall.bmp", thisAssembly);
@@ -235,11 +237,13 @@ namespace ValueDesign
             cmdGroup.SmallMainIcon = iBmp.CreateFileFromResourceBitmap("ValueDesign.MainIconSmall.bmp", thisAssembly);
 
             int menuToolbarOption = (int)(swCommandItemType_e.swMenuItem | swCommandItemType_e.swToolbarItem);
-            cmdIndex0 = cmdGroup.AddCommandItem2("CreateCube", -1, "Create a cube", "Create cube", 0, "CreateCube", "", mainItemID1, menuToolbarOption);
-            cmdIndex1 = cmdGroup.AddCommandItem2("Show PMP", -1, "Display sample property manager", "Show PMP", 2, "ShowPMP", "EnablePMP", mainItemID2, menuToolbarOption);
+            cmdIndex0 = cmdGroup.AddCommandItem2("CreateCube", -1, "创建阀块基体", "创建阀块基体", 0, "CreateCube", "", mainItemID1, menuToolbarOption);
+
+            cmdIndex1 = cmdGroup.AddCommandItem2("Show PMP", -1, "阀块参数选择", "选择阀块参数", 2, "ShowPMP", "EnablePMP", mainItemID2, menuToolbarOption);
             /*
              * 
              */
+            
             cmdGroup.HasToolbar = true;
             cmdGroup.HasMenu = true;
             cmdGroup.Activate();
@@ -249,7 +253,7 @@ namespace ValueDesign
 
 
             FlyoutGroup flyGroup = iCmdMgr.CreateFlyoutGroup(flyoutGroupID, "Dynamic Flyout", "Flyout Tooltip", "Flyout Hint",
-              cmdGroup.SmallMainIcon, cmdGroup.LargeMainIcon, cmdGroup.SmallIconList, cmdGroup.LargeIconList, "FlyoutCallback", "FlyoutEnable");
+            cmdGroup.SmallMainIcon, cmdGroup.LargeMainIcon, cmdGroup.SmallIconList, cmdGroup.LargeIconList, "FlyoutCallback", "FlyoutEnable");
 
 
             flyGroup.AddCommandItem("FlyoutCommand 1", "test", 0, "FlyoutCommandItem1", "FlyoutEnableCommandItem1");
@@ -293,8 +297,6 @@ namespace ValueDesign
 
                     bResult = cmdBox.AddCommands(cmdIDs, TextType);
 
-
-
                     CommandTabBox cmdBox1 = cmdTab.AddCommandTabBox();
                     cmdIDs = new int[1];
                     TextType = new int[1];
@@ -305,7 +307,6 @@ namespace ValueDesign
                     bResult = cmdBox1.AddCommands(cmdIDs, TextType);
 
                     cmdTab.AddSeparator(cmdBox1, cmdIDs[0]);
-
                 }
 
             }
@@ -313,6 +314,7 @@ namespace ValueDesign
 
         }
 
+        
         public void RemoveCommandMgr()
         {
             iBmp.Dispose();
@@ -349,19 +351,21 @@ namespace ValueDesign
 
         public Boolean AddPMP()
         {
-            ppage = new UserPMPage(this);
+            ppage = new UserPMPage(this);           
             return true;
         }
 
         public Boolean RemovePMP()
         {
             ppage = null;
+            valueBodyPpage = null;
             return true;
         }
 
         #endregion
 
         #region UI Callbacks
+        //create value body
         public void CreateCube()
         {
             //make sure we have a part open
@@ -369,12 +373,16 @@ namespace ValueDesign
             if ((partTemplate != null) && (partTemplate != ""))
             {
                 IModelDoc2 modDoc = (IModelDoc2)iSwApp.NewDocument(partTemplate, (int)swDwgPaperSizes_e.swDwgPaperA2size, 0.0, 0.0);
-
+                
                 modDoc.InsertSketch2(true);
+                valueBodyPpage = new ValueBodyPMPage(this);
+                ShowValueBodyPMP();
+                
+                return;
                 modDoc.SketchRectangle(0, 0, 0, .1, .1, .1, false);
                 //Extrude the sketch
                 IFeatureManager featMan = modDoc.FeatureManager;
-                featMan.FeatureExtrusion(true,
+                Feature valuebody = featMan.FeatureExtrusion(true,
                     false, false,
                     (int)swEndConditions_e.swEndCondBlind, (int)swEndConditions_e.swEndCondBlind,
                     0.1, 0.0,
@@ -385,11 +393,16 @@ namespace ValueDesign
                     false, false,
                     true,
                     false, false);
+
+                //修改特征名称为：阀块基体                
+                valuebody.Name = "阀块基体";
+                ShowValueBodyPMP();
             }
             else
             {
                 System.Windows.Forms.MessageBox.Show("There is no part template available. Please check your options and make sure there is a part template selected, or select a new part template.");
             }
+
         }
 
 
@@ -400,6 +413,22 @@ namespace ValueDesign
         }
 
         public int EnablePMP()
+        {
+            if (iSwApp.ActiveDoc != null)
+                return 1;
+            else
+                return 0;
+        }
+
+        public void ShowValueBodyPMP()
+        {
+            if (this.valueBodyPpage != null)
+            {                              
+                this.valueBodyPpage.Show();
+            }		 
+	    }
+
+        public int EnalbeValueBodyPMP()
         {
             if (iSwApp.ActiveDoc != null)
                 return 1;
@@ -429,6 +458,7 @@ namespace ValueDesign
         {
             return 1;
         }
+
         #endregion
 
         #region Event Methods

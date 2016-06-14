@@ -137,6 +137,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UserPMPage.cs" />
+    <Compile Include="ValueBodyPMPage.cs" />
+    <Compile Include="ValueBodyPMPHandler.cs" />
     <EmbeddedResource Include="ToolbarLarge.bmp" />
     <EmbeddedResource Include="ToolbarSmall.bmp" />
     <EmbeddedResource Include="MainIconLarge.bmp" />
