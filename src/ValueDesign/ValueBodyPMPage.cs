@@ -12,7 +12,7 @@ namespace ValueDesign
     {
         //Local Objects
         IPropertyManagerPage2 swPropertyPage = null;
-        ValueBodyPMPHandler handler = null;
+        public ValueBodyPMPHandler handler = null;
         ISldWorks iSwApp = null;
         SwAddin userAddin = null;
         
@@ -73,16 +73,12 @@ namespace ValueDesign
             else
             {
                 System.Windows.Forms.MessageBox.Show("SwAddin not set.");
-            }
-            EditedFeature = null;
+            }            
         }
 
-        public Feature EditedFeature
-        {
-            get;
-            set;
-
-        }
+        public int L{get;set;}
+        public int W { get; set; }
+        public int H { get; set; }
         private void CreatePropertyManagerPage()
         {
             int errors = -1;
@@ -135,9 +131,9 @@ namespace ValueDesign
             tbWidth = (IPropertyManagerPageTextbox)group1.AddControl(tbWidthID, textctlType, "", align, options, "阀块宽度");
             lbHeight = (IPropertyManagerPageLabel)group1.AddControl(lbHeightID, controlType, "高：", align, options, "阀块基体高度");
             tbHeight = (IPropertyManagerPageTextbox)group1.AddControl(tbHeightID, textctlType, "", align, options, "阀块高度");
-            tbLength.Text = "100";
-            tbWidth.Text = "100";
-            tbHeight.Text = "100";            
+            tbLength.Text = ValueConst.VALUE_DEFAULT_LENGTH.ToString();
+            tbWidth.Text = ValueConst.VALUE_DEFAULT_WIDTH.ToString();
+            tbHeight.Text = ValueConst.VALUE_DEFAULT_HEIGHT.ToString();            
         }
 
         public void Show()
@@ -148,31 +144,41 @@ namespace ValueDesign
             }
         }
 
-        public int GetCubeLength()
+        public int CubeLength
         {
-            int ret;
-            if(Int32.TryParse(this.tbLength.Text, out ret))
-                return ret;
-            return 0;
+            get
+            {
+                int ret;
+                if (Int32.TryParse(this.tbLength.Text, out ret))
+                {
+                    return ret;
+                }
 
+                return ValueConst.VALUE_DEFAULT_LENGTH; 
+            }
+            
         }
 
-        public int GetCubeWidth()
+        public int CubeWidth
         {
-            int ret;
-            if (Int32.TryParse(this.tbWidth.Text, out ret))
-                return ret;
-            return 0;
-
+           get
+           {
+               int ret;
+               if (Int32.TryParse(this.tbWidth.Text, out ret))
+                   return ret;
+               return ValueConst.VALUE_DEFAULT_WIDTH;
+           }          
         }
 
-        public int GetCubeHeight()
+        public int CubeHeight
         {
-            int ret;
-            if (Int32.TryParse(this.tbHeight.Text, out ret))
-                return ret;
-            return 0;
-
+            get
+            {
+                int ret;
+                if (Int32.TryParse(this.tbHeight.Text, out ret))
+                    return ret;
+                return ValueConst.VALUE_DEFAULT_HEIGHT;
+            }          
         }
     }
 }

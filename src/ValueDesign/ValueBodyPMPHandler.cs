@@ -12,12 +12,8 @@ namespace ValueDesign
         SwAddin userAddin; 
         ModelDoc2 swModel;
         ValueBodyPMPage activePage;
-        readonly double  factor = 1000.0;
-        public Feature ExtrudeFeature
-        {
-            get;
-            set;
-        }
+       
+        public bool IsAdaptNewValue = false;
         public ValueBodyPMPHandler(SwAddin addin, ValueBodyPMPage runningPage)
         {
             userAddin = addin;
@@ -46,35 +42,41 @@ namespace ValueDesign
             //.NET runtime environment from doing garbage collection at the wrong time.
             int IndentSize;
             IndentSize = System.Diagnostics.Debug.IndentSize;
-            System.Diagnostics.Debug.WriteLine(IndentSize);
-
-
-            ModelDoc2 swModel = (ModelDoc2)iSwApp.ActiveDoc;
+            System.Diagnostics.Debug.WriteLine(IndentSize);            
+                
             if (reason == (int)swPropertyManagerPageCloseReasons_e.swPropertyManagerPageClose_Okay)
             {
-                double l = this.activePage.GetCubeLength() / factor;
-                double w = this.activePage.GetCubeWidth() / factor;
-                double h = this.activePage.GetCubeHeight() / factor;
+                string partTemplate = iSwApp.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplatePart);
+                if ((partTemplate != null) && (partTemplate != ""))
+                {
+                    swModel = (ModelDoc2)iSwApp.NewDocument(partTemplate, (int)swDwgPaperSizes_e.swDwgPaperA2size, 0.0, 0.0);
+                    swModel.InsertSketch2(true);
+                    double x = this.activePage.CubeLength / ValueConst.factor;
+                    double y = this.activePage.CubeWidth / ValueConst.factor;
+                    double z = this.activePage.CubeHeight / ValueConst.factor;
+                    swModel.SketchRectangle(0, 0, 0, x, y, 0, false);
+                    //Extrude the sketch
+                    IFeatureManager featMan = swModel.FeatureManager;
+                    Feature valuebody = featMan.FeatureExtrusion(true,
+                        false, false,
+                        (int)swEndConditions_e.swEndCondBlind, (int)swEndConditions_e.swEndCondBlind,
+                        z, 0.0,
+                        false, false,
+                        false, false,
+                        0.0, 0.0,
+                        false, false,
+                        false, false,
+                        true,
+                        false, false);
 
-                swModel.SketchRectangle(0, 0, 0, l, w, 0, false);
-                //Extrude the sketch                           
-                IFeatureManager featMan = swModel.FeatureManager;
-                Feature valuebody = featMan.FeatureExtrusion(true,
-                    false, false,
-                    (int)swEndConditions_e.swEndCondBlind, (int)swEndConditions_e.swEndCondBlind,
-                    h, 0.0,
-                    false, false,
-                    false, false,
-                    0.0, 0.0,
-                    false, false,
-                    false, false,
-                    true,
-                    false, false);
-
-                //修改特征名称为：阀块基体                
-                valuebody.Name = "阀块基体";
-
-            }
+                    //修改特征名称为：阀块基体                
+                    valuebody.Name = "阀块基体";
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("There is no part template available. Please check your options and make sure there is a part template selected, or select a new part template.");
+                }                 
+            } 
         }
 
         public void OnComboboxEditChanged(int id, string text)

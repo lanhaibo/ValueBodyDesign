@@ -368,35 +368,17 @@ namespace ValueDesign
         //create value body
         public void CreateCube()
         {
+            valueBodyPpage = new ValueBodyPMPage(this);
+            ShowValueBodyPMP();
+            return;
             //make sure we have a part open
             string partTemplate = iSwApp.GetUserPreferenceStringValue((int)swUserPreferenceStringValue_e.swDefaultTemplatePart);
             if ((partTemplate != null) && (partTemplate != ""))
             {
                 IModelDoc2 modDoc = (IModelDoc2)iSwApp.NewDocument(partTemplate, (int)swDwgPaperSizes_e.swDwgPaperA2size, 0.0, 0.0);
                 
-                modDoc.InsertSketch2(true);
-                valueBodyPpage = new ValueBodyPMPage(this);
-                ShowValueBodyPMP();
                 
-                return;
-                modDoc.SketchRectangle(0, 0, 0, .1, .1, .1, false);
-                //Extrude the sketch
-                IFeatureManager featMan = modDoc.FeatureManager;
-                Feature valuebody = featMan.FeatureExtrusion(true,
-                    false, false,
-                    (int)swEndConditions_e.swEndCondBlind, (int)swEndConditions_e.swEndCondBlind,
-                    0.1, 0.0,
-                    false, false,
-                    false, false,
-                    0.0, 0.0,
-                    false, false,
-                    false, false,
-                    true,
-                    false, false);
-
-                //修改特征名称为：阀块基体                
-                valuebody.Name = "阀块基体";
-                ShowValueBodyPMP();
+                                            
             }
             else
             {

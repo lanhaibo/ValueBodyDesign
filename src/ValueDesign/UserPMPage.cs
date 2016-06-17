@@ -96,12 +96,12 @@ namespace ValueDesign
             options = (int)swAddGroupBoxOptions_e.swGroupBoxOptions_Expanded |
                       (int)swAddGroupBoxOptions_e.swGroupBoxOptions_Visible;
 
-            group1 = (IPropertyManagerPageGroup)swPropertyPage.AddGroupBox(group1ID, "Sample Group 1", options);
+            group1 = (IPropertyManagerPageGroup)swPropertyPage.AddGroupBox(group1ID, "·§¿×²åÈë", options);
 
             options = (int)swAddGroupBoxOptions_e.swGroupBoxOptions_Checkbox |
                       (int)swAddGroupBoxOptions_e.swGroupBoxOptions_Visible;
 
-            group2 = (IPropertyManagerPageGroup)swPropertyPage.AddGroupBox(group2ID, "Sample Group 2", options);
+            group2 = (IPropertyManagerPageGroup)swPropertyPage.AddGroupBox(group2ID, "ÓÍ¿×²åÈë", options);
 
             //Add the controls to group1
 
